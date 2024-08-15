@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final model =
+      FirebaseVertexAI.instance.generativeModel(model: 'gemini-1.5-flash');
+// // Provide a prompt that contains text
+//   final prompt = [Content.text('Write a story about a magic backpack.')];
+
+// // To generate text output, call generateContent with the text input
+//   final response = await model.generateContent(prompt);
+//   print(response.text);
 }
 
 class MyApp extends StatelessWidget {

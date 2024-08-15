@@ -1,13 +1,25 @@
 {
-  "hosting": {
-    "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "asia-east1"
+    "hosting": {
+        "source": ".",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "frameworksBackend": {
+            "region": "asia-east1"
+        }
+    },
+    "flutter": {
+        "platforms": {
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "photos-personalized-gemini",
+                    "configurations": {
+                        "web": "1:190919416212:web:9976752c54ae100d7a9781"
+                    }
+                }
+            }
+        }
     }
-  }
 }
