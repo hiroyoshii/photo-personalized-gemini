@@ -16,7 +16,7 @@ void main() async {
     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
     // argument for `webProvider`
     webProvider:
-        ReCaptchaV3Provider('6Ld7OycqAAAAAN7rl1SSnrRxMPVW_CDtdbmHQyHg'),
+        ReCaptchaV3Provider(const String.fromEnvironment("RECAPTCHA_SITE_KEY")),
   );
   runApp(const MyApp());
 }
@@ -91,22 +91,31 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0), child: Container()),
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              'コンテキスト情報として使いたい Google Photo のアカウントでログイン:',
-            ),
+      body: Container(
+        alignment: Alignment.center,
+        transformAlignment: Alignment.center,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 5 * 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Container()),
+              const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  'コンテキスト情報として使いたい Google Photo のアカウントでログイン:',
+                ),
+              ),
+              _plugin!.renderButton(),
+              (_client == null)
+                  ? Container()
+                  : PhotoGemini(client: _client!, albums: _albums),
+            ],
           ),
-          _plugin!.renderButton(),
-          (_client == null)
-              ? Container()
-              : PhotoGemini(client: _client!, albums: _albums),
-        ],
+        ),
       ),
     );
   }

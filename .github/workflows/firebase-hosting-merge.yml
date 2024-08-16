@@ -18,7 +18,7 @@ jobs:
           flutter-version: 3.24.0 # プロジェクトの Flutter バージョンに合わせる
       - name: Get Flutter dependencies
         run: flutter pub get
-      - run: flutter build web # ビルドコマンドは必要に応じてオプションを指定
+      - run: flutter build web  --dart-define=RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }} # ビルドコマンドは必要に応じてオプションを指定
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
