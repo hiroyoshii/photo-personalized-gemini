@@ -80,24 +80,19 @@ class _PhotoGeminiState extends State<PhotoGemini> {
                 future: _loadPhotos(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Column(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              WidgetSpan(
-                                child: Icon(Icons.check_circle,
-                                    color: Colors.purpleAccent),
-                              ),
-                              TextSpan(
-                                text: '${_mediaItems.length}件取り込み完了',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.check_circle,
+                                color: Colors.purpleAccent),
                           ),
-                        ),
-                        ..._mediaItems.map((e) => Image.memory(e.image)),
-                      ],
+                          TextSpan(
+                            text: '${_mediaItems.length}件取り込み完了',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
                     );
                   } else {
                     return const CircularProgressIndicator();

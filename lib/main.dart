@@ -16,7 +16,7 @@ void main() async {
     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
     // argument for `webProvider`
     webProvider:
-        ReCaptchaV3Provider("6Ld7OycqAAAAAN7rl1SSnrRxMPVW_CDtdbmHQyHg"),
+        ReCaptchaEnterpriseProvider("6Ld7OycqAAAAAN7rl1SSnrRxMPVW_CDtdbmHQyHg"),
   );
   runApp(const MyApp());
 }

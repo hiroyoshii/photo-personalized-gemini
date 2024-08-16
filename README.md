@@ -16,13 +16,15 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 # design
-this demo app is designed by using following features:
+this demo app is designed by using following APIs and tools:
 - firebase
   - hosting, vertex ai, app check
 - photo library api
   - album list, mediaItems:search
 - google cloud
-  - billing pub/sub, functions
+  - for billing: pub/sub, functions
+  - for photo api cors: functions, hosting
+    - https://issuetracker.google.com/issues/118662029?pli=1
 - flutter
   - web
 
