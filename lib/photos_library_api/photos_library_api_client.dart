@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:photos_personalized_gemini/photos_library_api/album.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +26,6 @@ import 'package:photos_personalized_gemini/photos_library_api/get_album_request.
 import 'package:photos_personalized_gemini/photos_library_api/list_albums_response.dart';
 import 'package:photos_personalized_gemini/photos_library_api/search_media_items_request.dart';
 import 'package:photos_personalized_gemini/photos_library_api/search_media_items_response.dart';
-import 'package:path/path.dart' as path;
 
 class PhotosLibraryApiClient {
   PhotosLibraryApiClient(this._authHeaders);
@@ -51,8 +51,6 @@ class PhotosLibraryApiClient {
 
     printError(response);
 
-    print("body ${response.body}");
-
     return ListAlbumsResponse.fromJson(jsonDecode(response.body));
   }
 
@@ -71,15 +69,12 @@ class PhotosLibraryApiClient {
 
   Future<Uint8List> downloadMediaItem(String baseUrl) async {
     final response = await http.get(Uri.parse(baseUrl));
-    if (response.statusCode != 200) {
-      print(response.reasonPhrase);
-      print(response.body);
-    }
+    printError(response);
     return response.bodyBytes;
   }
 
   static void printError(final Response response) {
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 && kDebugMode) {
       print(response.reasonPhrase);
       print(response.body);
     }

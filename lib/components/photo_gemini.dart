@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
@@ -25,8 +26,8 @@ class _PhotoGeminiState extends State<PhotoGemini> {
   final _controller = MultiSelectController<String>();
   List<String> _selected = [];
   String _inputText = "";
-  List<ContextImage> _mediaItems = [];
   bool _itemSynced = false;
+  List<ContextImage> _mediaItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,7 @@ class _PhotoGeminiState extends State<PhotoGemini> {
                                 color: Colors.purpleAccent),
                           ),
                           TextSpan(
-                            text: '取り込み完了',
+                            text: '${_mediaItems.length}件取り込み完了',
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -103,7 +104,7 @@ class _PhotoGeminiState extends State<PhotoGemini> {
           child: TextField(
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Gemini へのプロンプト',
+                labelText: 'Gemini 1.5 Pro へのプロンプト入力',
                 prefixIcon: Icon(Icons.smart_toy)),
             onSubmitted: (value) {
               setState(() {
@@ -137,7 +138,9 @@ class _PhotoGeminiState extends State<PhotoGemini> {
   }
 
   Future<bool> _loadPhotos() async {
-    print("load start");
+    if (kDebugMode) {
+      print("load start");
+    }
     try {
       final remaining = _mediaItems
           .where((element) => _selected.contains(element.albumId))
@@ -148,15 +151,18 @@ class _PhotoGeminiState extends State<PhotoGemini> {
             .isNotEmpty) {
           continue;
         }
-        print("load album: ${albumId}");
+        if (kDebugMode) {
+          print("load album: $albumId");
+        }
         final items = await widget.client!
             .searchMediaItems(SearchMediaItemsRequest(albumId, null, null));
-        print("search: ${items.mediaItems?.length}");
-
+        if (kDebugMode) {
+          print("search: ${items.mediaItems?.length}");
+        }
         for (var item in items.mediaItems!) {
           if (item != null) {
             final bodyBytes =
-                await widget.client!.downloadMediaItem(item.baseUrl!);
+                await widget.client.downloadMediaItem(item.baseUrl!);
             remaining.add(ContextImage(albumId, bodyBytes, item.mimeType!));
           }
         }
@@ -166,15 +172,18 @@ class _PhotoGeminiState extends State<PhotoGemini> {
       print(e);
       return Future.value(false);
     }
-
-    print("finish load media: ${_mediaItems.length}");
+    if (kDebugMode) {
+      print("finish load media: ${_mediaItems.length}");
+    }
     return Future.value(true);
   }
 
   Future<GenerateContentResponse> _requestGemini() async {
     try {
       // Provide a prompt that contains text
-      print("req gemini");
+      if (kDebugMode) {
+        print("req gemini");
+      }
       final prompt = [
         Content.multi([
           TextPart(
