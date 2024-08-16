@@ -26,6 +26,7 @@ class _PhotoGeminiState extends State<PhotoGemini> {
   final _controller = MultiSelectController<String>();
   List<String> _selected = [];
   String _inputText = "";
+  bool _inputTextChange = false;
   bool _itemSynced = false;
   List<ContextImage> _mediaItems = [];
 
@@ -109,11 +110,17 @@ class _PhotoGeminiState extends State<PhotoGemini> {
             onSubmitted: (value) {
               setState(() {
                 _inputText = value;
+                _inputTextChange = true;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                _inputTextChange = false;
               });
             },
           ),
         ),
-        (_inputText == "")
+        (!_inputTextChange)
             ? const Text('')
             : FutureBuilder(
                 future: _requestGemini(),
