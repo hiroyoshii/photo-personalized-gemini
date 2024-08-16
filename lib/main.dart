@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:photos_personalized_gemini/components/photo_gemini.dart';
 import 'package:photos_personalized_gemini/photos_library_api/album.dart';
 import 'package:photos_personalized_gemini/photos_library_api/photos_library_api_client.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -90,6 +92,25 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: IconButton(
+              icon: SvgPicture.asset("github.svg",
+                  colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                  semanticsLabel: 'github source repository'),
+              onPressed: () async {
+                final url = Uri.parse(
+                    "https://github.com/hiroyoshii/photo-personalized-gemini");
+                if (await canLaunchUrl(url)) {
+                  launchUrl(url, webOnlyWindowName: '_blank');
+                } else {
+                  print('Cannot launch url: $url');
+                }
+              },
+            ),
+          ),
+        ],
       ),
       body: Container(
         alignment: Alignment.center,
