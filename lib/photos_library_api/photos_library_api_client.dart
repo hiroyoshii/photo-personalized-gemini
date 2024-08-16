@@ -15,7 +15,6 @@
  */
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -68,7 +67,10 @@ class PhotosLibraryApiClient {
   }
 
   Future<Uint8List> downloadMediaItem(String baseUrl) async {
-    final response = await http.get(Uri.parse(baseUrl));
+    final response = await http.post(
+      Uri.parse("/imageblob"),
+      body: jsonEncode({"message": baseUrl}),
+    );
     printError(response);
     return response.bodyBytes;
   }
