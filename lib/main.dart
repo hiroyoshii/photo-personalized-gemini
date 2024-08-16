@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
             child: IconButton(
-              icon: SvgPicture.asset("github.svg",
+              icon: SvgPicture.asset("assets/github.svg",
                   colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
                   semanticsLabel: 'github source repository'),
               onPressed: () async {
