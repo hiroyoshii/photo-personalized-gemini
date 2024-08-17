@@ -45,16 +45,6 @@ class _PhotoGeminiState extends State<PhotoGemini> {
             fieldDecoration: FieldDecoration(
               hintText: 'アルバムを選択してください',
               hintStyle: const TextStyle(color: Colors.black87),
-              suffixIcon: IconButton(
-                  onPressed: () => setState(() {
-                        _selected = _controller.selectedItems
-                            .map((e) => e.value)
-                            .toList();
-                        _itemSynced = true;
-                      }),
-                  icon: (_selected.isEmpty)
-                      ? Icon(Icons.sync)
-                      : Icon(Icons.sync, color: Colors.purpleAccent)),
               showClearIcon: false,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -77,7 +67,19 @@ class _PhotoGeminiState extends State<PhotoGemini> {
           ),
         ),
         (!_itemSynced)
-            ? Container()
+            ? TextButton.icon(
+                onPressed: (_selected.isEmpty)
+                    ? null
+                    : () => setState(() {
+                          _selected = _controller.selectedItems
+                              .map((e) => e.value)
+                              .toList();
+                          _itemSynced = true;
+                        }),
+                icon: (_selected.isEmpty)
+                    ? Icon(Icons.sync)
+                    : Icon(Icons.sync, color: Colors.purpleAccent),
+                label: Text('コンテキスト情報の取得'))
             : FutureBuilder(
                 future: _loadPhotos(),
                 builder: (context, snapshot) {
@@ -126,6 +128,14 @@ class _PhotoGeminiState extends State<PhotoGemini> {
             : FutureBuilder(
                 future: _requestGemini(),
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                          "以下のエラーが発生しました。\n ${snapshot.error.toString()}",
+                          style: TextStyle(color: Colors.red)),
+                    );
+                  }
                   if (snapshot.hasData) {
                     return Padding(
                       padding: const EdgeInsets.all(20.0),
