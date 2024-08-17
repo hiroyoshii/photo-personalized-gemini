@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:photos_personalized_gemini/photos_library_api/album.dart';
+import 'package:photos_personalized_gemini/photos_library_api/media_item.dart';
 import 'package:photos_personalized_gemini/photos_library_api/photos_library_api_client.dart';
 import 'package:photos_personalized_gemini/photos_library_api/search_media_items_request.dart';
 
@@ -161,17 +162,22 @@ class _PhotoGeminiState extends State<PhotoGemini> {
         if (kDebugMode) {
           print("load album: $albumId");
         }
-        final items = await widget.client!
+        final items = await widget.client
             .searchMediaItems(SearchMediaItemsRequest(albumId, null, null));
         if (kDebugMode) {
           print("search: ${items.mediaItems?.length}");
         }
+        List<Future<ContextImage>> futureList = [];
         for (var item in items.mediaItems!) {
           if (item != null) {
-            final bodyBytes =
-                await widget.client.downloadMediaItem(item.baseUrl!);
-            remaining.add(ContextImage(albumId, bodyBytes, item.mimeType!));
+            futureList.add(_download(albumId, item));
           }
+        }
+        var futureWait = Future.wait(futureList);
+
+        var result = await futureWait;
+        for (var contextImage in result) {
+          remaining.add(contextImage);
         }
       }
       _mediaItems = remaining;
@@ -183,6 +189,11 @@ class _PhotoGeminiState extends State<PhotoGemini> {
       print("finish load media: ${_mediaItems.length}");
     }
     return Future.value(true);
+  }
+
+  Future<ContextImage> _download(String albumId, MediaItem item) async {
+    var bodyBytes = await widget.client.downloadMediaItem(item.baseUrl!);
+    return ContextImage(albumId, bodyBytes, item.mimeType!);
   }
 
   Future<GenerateContentResponse> _requestGemini() async {
